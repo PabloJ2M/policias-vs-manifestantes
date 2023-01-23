@@ -10,6 +10,8 @@ namespace Player
         private Rigidbody2D _rgb;
         private bool _backwards;
 
+        public float Limits { set => _limits = value; }
+
         private void Awake() => _rgb = GetComponent<Rigidbody2D>();
         private void Update()
         {

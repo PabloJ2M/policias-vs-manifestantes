@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour, IRegected
     private void Awake() => _rgb = GetComponent<Rigidbody2D>();
     private void OnEnable() => Direction = Vector2.down;
     private void FixedUpdate() => _rgb.MovePosition(_speed * Time.fixedDeltaTime * Direction + (Vector2)transform.position);
-    private void OnBecameInvisible() { print("oclude"); gameObject.SetActive(false); }
+    private void OnBecameInvisible() => gameObject.SetActive(false);
 
     public void OnCollision(Vector2 normal) => Direction = normal;
 }
