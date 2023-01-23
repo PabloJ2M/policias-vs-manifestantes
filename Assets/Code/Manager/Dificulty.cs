@@ -10,6 +10,8 @@ public class Dificulty : MonoBehaviour
     }
 
     [SerializeField] private Player.Movement _player;
+    [SerializeField] private Transform _enemyLine, _playerLine;
+    [SerializeField, Range(0, 1)] private float _enemyPercent, _playerPercent;
     [SerializeField] private Camera _camera;
     [Space]
     [SerializeField, Range(0, 1)] private float _time;
@@ -19,7 +21,9 @@ public class Dificulty : MonoBehaviour
     private System.Action OnShieldUsed;
     private int _level, _current;
 
-    private void Start() => OnShieldUsed += AddDificulty;
+    private void Awake() => OnShieldUsed += AddDificulty;
+    private void Start() => CameraSize(_camera.orthographicSize);
+
     private void AddDificulty()
     {
         if (_level >= _states.Length) return;
@@ -34,6 +38,11 @@ public class Dificulty : MonoBehaviour
         _level++;
         _current = 0;
     }
-    private void CameraSize(float value) => _camera.orthographicSize = value;
+    private void CameraSize(float value)
+    {
+        _camera.orthographicSize = value;
+        _enemyLine.position = new Vector2(0, _camera.ViewportToWorldPoint(_enemyPercent * Vector2.up).y);
+        _playerLine.position = new Vector2(0, _camera.ViewportToWorldPoint(_playerPercent * Vector2.up).y);
+    }
     public void DetectShield() => OnShieldUsed?.Invoke();
 }

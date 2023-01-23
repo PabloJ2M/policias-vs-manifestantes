@@ -2396,6 +2396,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 874101358}
+  _enemyLine: {fileID: 2085072800}
+  _playerLine: {fileID: 874101357}
+  _enemyPercent: 0.9
+  _playerPercent: 0.25
   _camera: {fileID: 519420031}
   _time: 0.5
   _curve:
