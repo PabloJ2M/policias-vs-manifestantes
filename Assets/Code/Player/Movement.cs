@@ -1,31 +1,49 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Player
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class Movement : MonoBehaviour
     {
+        [SerializeField] private Camera _cam;
+        [SerializeField] private InputAction _movement;
         [SerializeField, Range(0, 10)] private float _speed;
         [SerializeField, Range(0, 10)] private float _limits;
         private Rigidbody2D _rgb;
-        private bool _backwards;
+        private Vector2 _target, _current;
+        //private bool _backwards;
 
         public float Limits { set => _limits = value; }
 
         private void Awake() => _rgb = GetComponent<Rigidbody2D>();
+        private void Start() => _movement.performed += SetPosition;
+        private void OnEnable() => _movement.Enable();
+        private void OnDisable() => _movement.Disable();
+        //private void Update()
+        //{
+        //    Vector2 position = transform.position;
+        //    position.x = Mathf.Clamp(position.x, -_limits, _limits);
+
+        //    if (Mathf.Abs(transform.position.x) <= _limits) return;
+        //    transform.position = position;
+        //    SwipeDirection();
+        //}
         private void Update()
         {
-            Vector2 position = transform.position;
-            position.x = Mathf.Clamp(position.x, -_limits, _limits);
-
-            if (Mathf.Abs(transform.position.x) <= _limits) return;
-            transform.position = position;
-            SwipeDirection();
+            _current.y = transform.position.y;
+            _current.x = Mathf.Lerp(_current.x, _target.x, Time.deltaTime * _speed);
+            _current.x = Mathf.Clamp(_current.x, -_limits, _limits);
         }
         private void FixedUpdate()
         {
-            Vector2 direction = _backwards ? Vector2.right : Vector2.left;
-            _rgb.MovePosition(_speed * Time.fixedDeltaTime * direction + (Vector2)transform.position);
+            _rgb.MovePosition(_current);
+            //Vector2 direction = _backwards ? Vector2.right : Vector2.left;
+            //_rgb.MovePosition(_speed * Time.fixedDeltaTime * direction + (Vector2)transform.position);
+        }
+        private void SetPosition(InputAction.CallbackContext ctx)
+        {
+            _target = _cam.ScreenToWorldPoint(ctx.ReadValue<Vector2>());
         }
         private void OnDrawGizmos()
         {
@@ -39,7 +57,7 @@ namespace Player
 
         public void SwipeDirection()
         {
-            _backwards = !_backwards;
+            //_backwards = !_backwards;
         }
     }
 }

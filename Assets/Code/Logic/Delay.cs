@@ -4,11 +4,12 @@ using UnityEngine.Events;
 
 public class Delay : MonoBehaviour
 {
-    [SerializeField] private bool _loop;
+    [SerializeField] private bool _loop, _playOnAwake = true;
     [SerializeField, Range(0, 10)] private float _time;
     [SerializeField] private UnityEvent _onComplete;
 
-    public void Start() => StartCoroutine(BeginDelay(_time, _time));
+    private void Start() { if (_playOnAwake) StartDelay(); }
+    public void StartDelay() => StartCoroutine(BeginDelay(_time, _time));
     protected virtual IEnumerator BeginDelay(float time, float constant)
     {
         yield return new WaitForSeconds(time);
